@@ -6,14 +6,30 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Wallet } from "lucide-react";
-import { useConnectors, useConnect } from "wagmi";
+import { useEffect } from "react";
+import { useConnectors, useConnect , useConnection } from "wagmi";
+import { useSwitchChain } from "wagmi";
 
 const WalletModal = ({ isOpen, onClose }) => {
   const connectors = useConnectors(); // all supported connections like injected , metamask
   const allowedWallets = ["metaMaskSDK", "walletConnect"];
   const connect = useConnect();
+  const {chainId , isConnected} = useConnection();
+  const switchChain = useSwitchChain()
 
-  console.log("connectors", connectors);
+  console.log("chaindId", chainId)
+
+  useEffect(() => {
+    if (isConnected && chainId !== 8453) {
+      switchChain.mutate(
+        { chainId: 8453 },
+        {
+          onSuccess: () => console.log("Switched to Mainnet"),
+          onError: (err) => console.error("Chain switch failed", err),
+        }
+      );
+    }
+  }, [chainId, isConnected]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
