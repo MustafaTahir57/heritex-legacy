@@ -92,9 +92,9 @@ const Navbar = () => {
                 </Link>
               );
             })}
-            <Button variant="gradient" className="mt-4 w-full gap-2" onClick={() => setIsWalletModalOpen(true)}>
-              <Wallet className="w-4 h-4" />
-              Connect Wallet
+            <Button variant="gradient" className="gap-2" onClick={() => isConnected? disconnect({ connector: connections[0].connector }) : setIsWalletModalOpen(true)}>
+              <Wallet className="w-4 h-4"/>
+              {isConnected ? truncateAddress(address) : "Connect Wallet"}
             </Button>
           </div>
         </div>
