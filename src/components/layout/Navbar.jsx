@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import WalletModal from "@/components/WalletModal";
 import { 
   Wallet, 
   Menu, 
@@ -22,6 +23,7 @@ const navLinks = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const location = useLocation();
 
   return (
@@ -53,7 +55,7 @@ const Navbar = () => {
           </div>
 
           <div className="hidden lg:flex items-center gap-4">
-            <Button variant="gradient" className="gap-2">
+            <Button variant="gradient" className="gap-2" onClick={() => setIsWalletModalOpen(true)}>
               <Wallet className="w-4 h-4" />
               Connect Wallet
             </Button>
@@ -85,13 +87,15 @@ const Navbar = () => {
                 </Link>
               );
             })}
-            <Button variant="gradient" className="mt-4 w-full gap-2">
+            <Button variant="gradient" className="mt-4 w-full gap-2" onClick={() => setIsWalletModalOpen(true)}>
               <Wallet className="w-4 h-4" />
               Connect Wallet
             </Button>
           </div>
         </div>
       )}
+
+      <WalletModal isOpen={isWalletModalOpen} onClose={() => setIsWalletModalOpen(false)} />
     </nav>
   );
 };
