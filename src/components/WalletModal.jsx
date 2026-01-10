@@ -6,22 +6,14 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Wallet } from "lucide-react";
-import { useConnectors } from "wagmi";
+import { useConnectors, useConnect } from "wagmi";
 
 const WalletModal = ({ isOpen, onClose }) => {
-  const connectors = useConnectors();  // all supported connections like injected , metamask
+  const connectors = useConnectors(); // all supported connections like injected , metamask
   const allowedWallets = ["metaMaskSDK", "walletConnect"];
+  const connect = useConnect();
 
-  console.log("connectors", connectors)
-
-  const handleConnect = async (connector) => {
-    try {
-      await connector.connect(); // connect in v3
-      onClose()
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  console.log("connectors", connectors);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -39,13 +31,16 @@ const WalletModal = ({ isOpen, onClose }) => {
         </DialogHeader>
 
         <div className="grid gap-3 py-4">
-          {connectors.filter((wallet) => allowedWallets.includes(wallet?.id)).map((wallet) => (
+          {connectors
+            .filter((wallet) => allowedWallets.includes(wallet?.id))
+            .map((wallet) => (
               <button
                 key={wallet.id}
                 className="group relative flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-secondary/30 hover:bg-secondary/60 hover:border-primary/50 transition-all duration-300"
-                onClick={() =>
-                  handleConnect(wallet)
-                }
+                onClick={() => {
+                  connect.mutate({ connector: wallet }); // connect in v3
+                  onClose();
+                }}
               >
                 <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-background/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   {/* wallet icon logic */}
