@@ -12,6 +12,8 @@ import {
   Users, 
   Timer 
 } from "lucide-react";
+import { useConnection , useConnections , useDisconnect } from "wagmi";
+import { truncateAddress } from "../../lib/utils";
 
 const navLinks = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -25,6 +27,9 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
   const location = useLocation();
+  const {chainId , address , isConnected} = useConnection();
+  const connections = useConnections();  // Array of all available connections
+  const { disconnect } = useDisconnect();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-border/50">
@@ -55,9 +60,9 @@ const Navbar = () => {
           </div>
 
           <div className="hidden lg:flex items-center gap-4">
-            <Button variant="gradient" className="gap-2" onClick={() => setIsWalletModalOpen(true)}>
-              <Wallet className="w-4 h-4" />
-              Connect Wallet
+            <Button variant="gradient" className="gap-2" onClick={() => isConnected? disconnect({ connector: connections[0].connector }) : setIsWalletModalOpen(true)}>
+              <Wallet className="w-4 h-4"/>
+              {isConnected ? truncateAddress(address) : "Connect Wallet"}
             </Button>
           </div>
 
