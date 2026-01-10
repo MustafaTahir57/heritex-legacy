@@ -10,7 +10,9 @@ import { useConnectors } from "wagmi";
 
 const WalletModal = ({ isOpen, onClose }) => {
   const connectors = useConnectors();  // all supported connections like injected , metamask
-  const allowedWallets = ["io.metamask", "walletConnect"];
+  const allowedWallets = ["metaMaskSDK", "walletConnect"];
+
+  console.log("connectors", connectors)
 
   const handleConnect = async (connector) => {
     try {
@@ -47,7 +49,7 @@ const WalletModal = ({ isOpen, onClose }) => {
               >
                 <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-background/50 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   {/* wallet icon logic */}
-                  {wallet.id === "io.metamask" ? (
+                  {wallet.id === "metaMaskSDK" ? (
                     <span>
                       {" "}
                       <svg viewBox="0 0 40 40" className="w-10 h-10">
@@ -123,7 +125,7 @@ const WalletModal = ({ isOpen, onClose }) => {
                     <span className="font-semibold text-foreground">
                       {wallet.name}
                     </span>
-                    {wallet.id === "io.metamask" && (
+                    {wallet.id === "metaMaskSDK" && (
                       <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-primary/20 text-primary">
                         Popular
                       </span>
