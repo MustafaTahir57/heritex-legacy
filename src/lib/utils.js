@@ -10,3 +10,7 @@ export function truncateAddress(address, start = 6, end = 4) {
   return `${address.slice(0, start)}...${address.slice(-end)}`;
 }
 
+export function toHexChainID(chainId) {
+  return "0x" + chainId.toString(16);
+}
+

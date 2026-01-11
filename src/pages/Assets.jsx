@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState , useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
+import {useConnection , useChains} from "wagmi"
+import { toHexChainID } from "@/lib/utils"
+import { getWalletTokenBalances } from "@/services/getAllTokenBalances"
 import { 
   Coins, 
   Wallet, 
@@ -11,6 +14,7 @@ import {
   CircleDollarSign,
   Check
 } from "lucide-react";
+
 
 const registeredAssets = [
   { type: "ETH", name: "Ethereum", amount: "5.2 ETH", value: "$12,480", icon: "Ξ", color: "from-blue-500 to-purple-500" },
@@ -27,6 +31,28 @@ const supportedAssets = [
 
 const Assets = () => {
   const [selectedTab, setSelectedTab] = useState("registered");
+  const [allAssets, setallAssets] = useState([])
+
+  const {chainId , address , isConnected} = useConnection();
+
+  useEffect(() => {
+    if (!isConnected) return;
+  
+    const fetchTokenBalances = async () => {
+      try {
+        const hexChainID = toHexChainID(chainId);
+        const balances = await getWalletTokenBalances(address, hexChainID);
+        setallAssets(balances.result)
+        // Optionally store in state
+        // setTokens(balances.result);
+      } catch (error) {
+        console.error("Failed to fetch token balances:", error);
+      }
+    };
+  
+    fetchTokenBalances();
+  }, [address, isConnected, chainId]);
+  
 
   return (
     <div className="min-h-screen bg-background">
@@ -43,10 +69,6 @@ const Assets = () => {
                 Register and manage your crypto assets for inheritance.
               </p>
             </div>
-            <Button variant="gradient" className="gap-2 mt-4 md:mt-0">
-              <Wallet className="w-4 h-4" />
-              Connect Wallet
-            </Button>
           </div>
 
           {/* Tabs */}
@@ -59,7 +81,7 @@ const Assets = () => {
                   : "bg-secondary text-muted-foreground hover:text-foreground"
               }`}
             >
-              Registered Assets
+              Register Your Assets
             </button>
             <button
               onClick={() => setSelectedTab("add")}

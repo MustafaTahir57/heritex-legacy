@@ -20,11 +20,11 @@ const WalletModal = ({ isOpen, onClose }) => {
   console.log("chaindId", chainId)
 
   useEffect(() => {
-    if (isConnected && chainId !== 8453) {
+    if (isConnected && chainId !== 56) {
       switchChain.mutate(
-        { chainId: 8453 },
+        { chainId: 56 },
         {
-          onSuccess: () => console.log("Switched to Mainnet"),
+          onSuccess: () => console.log("Switched to BSC Mainnet"),
           onError: (err) => console.error("Chain switch failed", err),
         }
       );
